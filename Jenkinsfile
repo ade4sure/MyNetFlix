@@ -17,7 +17,7 @@ pipeline {
                         // Set the DOCKER_HOST environment variable to specify the remote Docker server
                         env.DOCKER_HOST = "ssh://${DOCKER_SERVER_USER}@${DOCKER_SERVER}"
 
-                         //Show PWD
+                        //Show PWD
                         sh "pwd"
 
                         // Show HostName                        
