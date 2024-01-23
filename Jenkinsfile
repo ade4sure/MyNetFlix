@@ -18,7 +18,7 @@ pipeline {
                                 ssh jenkinsMaster@10.128.0.3 
                                     "hostname"
                                     "pwd"
-                                    "git clone ${GITHUB_REPO} /tmp/frontend"
+                                    "git --version"
                             '''
                        
                        
