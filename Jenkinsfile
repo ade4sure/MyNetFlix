@@ -17,7 +17,7 @@ pipeline {
                         // Clone the GitHub repository on the remote server
                         //sh "mkdir ~/tmp/frontend2"
                         sh "git clone ${GITHUB_REPO} ~/tmp/frontend"
-                        sh "echo ${hostname}"
+                        sh "hostname"
 
                     }
                 }
