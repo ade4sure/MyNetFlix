@@ -17,8 +17,19 @@ pipeline {
                         // Set the DOCKER_HOST environment variable to specify the remote Docker server
                         env.DOCKER_HOST = "ssh://${DOCKER_SERVER_USER}@${DOCKER_SERVER}"
 
+                         //Show PWD
+                        sh "pwd"
+
+                        // Show HostName                        
+                        sh "hostname"
+
+                        //Clear frontEnd Temp
+                        sh "sudo rm -r /tmp/frontend"
+
                         // Clone the GitHub repository on the remote server
                         sh "git clone ${GITHUB_REPO} /tmp/frontend"
+
+                       
 
                         /* // Build Docker image on the remote server
                         sh """
