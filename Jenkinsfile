@@ -7,6 +7,7 @@ pipeline {
         DOCKER_SERVER = '10.128.0.3'
         DOCKER_SERVER_USER = 'jenkinsMaster'
         DOCKER_IMAGE_NAME = 'frontEndImage'
+        APP_TEMP_PATH = '/tmp/frontend'
     }
     stages {
         stage('Deploy to Remote Docker Server') {
@@ -14,6 +15,7 @@ pipeline {
                 script {
                     // Use SSH Agent to run Docker commands on the remote server
                     sshagent(['f355d542-7358-4d58-93a6-cc2e50f192fd']) {
+                        
                         // Set the DOCKER_HOST environment variable to specify the remote Docker server
                         env.DOCKER_HOST = "ssh://${DOCKER_SERVER_USER}@${DOCKER_SERVER}"
 
@@ -32,13 +34,16 @@ pipeline {
                         // Clone the GitHub repository on the remote server
                         sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} git clone ${GITHUB_REPO} /tmp/frontend"
 
+                        //Get Docker Image path
+                        env.IMAGES_PATH = sh(script: "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'docker info | grep -i 'docker root dir''", returnStdout: true).trim()
+                        
+                        //build Docker image
+                        "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd ${APP_TEMP_PATH} : docker build -t ${DOCKER_IMAGE_NAME} -f ${env.IMAGES_PATH} ."
                        
-               
-
-                        /* // Build Docker image on the remote server
+                      /*  //get build Docker image                       
                         sh """
-                            cd /tmp/yourrepo
-                            docker build -t ${DOCKER_IMAGE_NAME} -f ${DOCKERFILE_PATH} .
+                            "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'cd ${APP_TEMP_PATH}'"
+                            "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd ${APP_TEMP_PATH} : docker build -t ${DOCKER_IMAGE_NAME} -f ${env.IMAGES_PATH} ."
                         """
 
                         // Save and load Docker image on the remote server
