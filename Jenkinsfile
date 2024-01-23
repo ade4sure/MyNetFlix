@@ -24,12 +24,12 @@ pipeline {
                         sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'hostname'"
 
                         //Clear frontEnd Temp
-                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER}'sudo rm -r /tmp/frontend'"
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'sudo rm -r /tmp/frontend'"
 
                         // Clone the GitHub repository on the remote server
                         sh "git clone ${GITHUB_REPO} /tmp/frontend"
 
-                       sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER}'git --version'"
+                       sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'git --version'"
 
                         /* // Build Docker image on the remote server
                         sh """
