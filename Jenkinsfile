@@ -30,9 +30,12 @@ pipeline {
                         sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'git --version'"
 
                         // Clone the GitHub repository on the remote server
-                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} git clone ${GITHUB_REPO} /tmp/frontend"
+                        //sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} git clone ${GITHUB_REPO} /tmp/frontend"
 
-                        
+                         // Set a custom environment variable with the hostname of the remote server
+                        env.RESPONSE = sh(script: "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} git clone ${GITHUB_REPO} /tmp/frontend", returnStdout: false)
+
+               
 
                         /* // Build Docker image on the remote server
                         sh """
