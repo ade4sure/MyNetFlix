@@ -15,7 +15,7 @@ pipeline {
                         sh "pwd"
 
                         // Clone the GitHub repository on the remote server
-                        sh "git clone ${GITHUB_REPO} /tmp/frontend"
+                        sh "git clone ${GITHUB_REPO} ~/tmp/frontend"
 
                     }
                 }
