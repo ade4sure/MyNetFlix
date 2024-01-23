@@ -9,29 +9,28 @@ pipeline {
         DOCKER_IMAGE_NAME = 'frontEndImage'
     }
     stages {
-        stage('SSH') {
+        stage('Deploy to Remote Docker Server') {
             steps {
-                        sshagent(credentials: ['f355d542-7358-4d58-93a6-cc2e50f192fd']) {
-                        sh '''
-                                [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
-                                ssh-keyscan -t rsa,dsa 10.128.0.3 >> ~/.ssh/known_hosts
-                                ssh jenkinsMaster@10.128.0.3 
-                                    "hostname"
-                                    "pwd"
-                                    "git --version"
-                            '''
-                       
-                       
-                        //sh "pwd"
+                script {
+                    // Use SSH Agent to run Docker commands on the remote server
+                    sshagent(['f355d542-7358-4d58-93a6-cc2e50f192fd']) {
+                        // Set the DOCKER_HOST environment variable to specify the remote Docker server
+                        env.DOCKER_HOST = "ssh://${DOCKER_SERVER_USER}@${DOCKER_SERVER}"
 
                         // Clone the GitHub repository on the remote server
-                        
-                        //sh "hostname"
-                        //sh "git clone ${GITHUB_REPO} ~/tmp/frontend"
-                        
+                        sh "git clone ${GITHUB_REPO} /tmp/frontend"
 
+                        /* // Build Docker image on the remote server
+                        sh """
+                            cd /tmp/yourrepo
+                            docker build -t ${DOCKER_IMAGE_NAME} -f ${DOCKERFILE_PATH} .
+                        """
+
+                        // Save and load Docker image on the remote server
+                        sh "docker save ${DOCKER_IMAGE_NAME} | docker load" */
                     }
                 }
+            }
         }
     }
 }
