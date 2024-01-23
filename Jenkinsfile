@@ -26,10 +26,13 @@ pipeline {
                         //Clear frontEnd Temp
                         sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'sudo [ -d '/tmp/frontend' ] && rm -r /tmp/frontend || pwd'"
 
-                        // Clone the GitHub repository on the remote server
-                        sh "${env.DOCKER_HOST} git clone ${GITHUB_REPO} /tmp/frontend"
+                        //get Git version
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'git --version'"
 
-                       sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'git --version'"
+                        // Clone the GitHub repository on the remote server
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} git clone ${GITHUB_REPO} /tmp/frontend"
+
+                        
 
                         /* // Build Docker image on the remote server
                         sh """
