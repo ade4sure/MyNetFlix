@@ -19,6 +19,7 @@ pipeline {
                                 hostname
                                 pwd
                                 git --version
+                                git clone ${GITHUB_REPO} /tmp/frontend
                                 "
                                     
                             '''
