@@ -12,12 +12,19 @@ pipeline {
         stage('SSH') {
             steps {
                         sshagent(credentials: ['f355d542-7358-4d58-93a6-cc2e50f192fd']) {
-                        sh "pwd"
+                        sh '''
+                                [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
+                                ssh-keyscan -t rsa,dsa 10.128.0.3 >> ~/.ssh/known_hosts
+                                ssh jenkinsMaster@10.128.0.3 "hostname"
+                            '''
+                       
+                       
+                        //sh "pwd"
 
                         // Clone the GitHub repository on the remote server
-                        //sh "mkdir ~/tmp/frontend2"
-                        sh "hostname"
-                        sh "git clone ${GITHUB_REPO} ~/tmp/frontend"
+                        
+                        //sh "hostname"
+                        //sh "git clone ${GITHUB_REPO} ~/tmp/frontend"
                         
 
                     }
