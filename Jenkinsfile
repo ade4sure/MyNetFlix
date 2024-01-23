@@ -8,6 +8,7 @@ pipeline {
         DOCKER_SERVER_USER = 'jenkinsMaster'
         DOCKER_IMAGE_NAME = 'frontEndImage'
         APP_TEMP_PATH = '/tmp/frontend'
+        DOCKER_IMAGE_PATH = '~/docker_data'
     }
     stages {
         stage('Deploy to Remote Docker Server') {
@@ -32,15 +33,15 @@ pipeline {
                         sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'git --version'"
 
                         // Clone the GitHub repository on the remote server
-                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} git clone ${GITHUB_REPO} /tmp/frontend"
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} git clone ${GITHUB_REPO} ${APP_TEMP_PATH}"
 
                         //Get Docker Image path
-                        env.IMAGES_PATH = sh(script: "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'docker info | grep -i 'docker root dir''", returnStdout: true).trim()
+                        //env.IMAGES_PATH = sh(script: "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'docker info | grep -i 'docker root dir''", returnStdout: true).trim()
                         
                         //build Docker image
-                        "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd ${APP_TEMP_PATH} : docker build -t ${DOCKER_IMAGE_NAME} -f ${env.IMAGES_PATH} ."
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd ${APP_TEMP_PATH} : docker build -t ${DOCKER_IMAGE_NAME} -f ${DOCKER_IMAGE_PATH} ."
                        
-                      /*  //get build Docker image                       
+                        /*  //get build Docker image                       
                         sh """
                             "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'cd ${APP_TEMP_PATH}'"
                             "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd ${APP_TEMP_PATH} : docker build -t ${DOCKER_IMAGE_NAME} -f ${env.IMAGES_PATH} ."
