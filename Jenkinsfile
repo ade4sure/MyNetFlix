@@ -46,9 +46,7 @@ pipeline {
                         //sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd /tmp/frontend/ ; docker build -f MyNetFlix/Dockerfile -t frontendimage:latest ."
                        
                         sh '''
-                                [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
-                                ssh-keyscan -t rsa,dsa 10.128.0.3 >> ~/.ssh/known_hosts
-                                ssh jenkinsMaster@10.128.0.3 "
+                                ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} "
                                     cd /tmp/frontend/
                                     docker build -f MyNetFlix/Dockerfile -t frontendimage:latest ."
                             '''
