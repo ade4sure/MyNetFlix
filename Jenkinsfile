@@ -43,8 +43,18 @@ pipeline {
                         sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'cd ${APP_TEMP_PATH}/MyNetFlix'"
                         sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'pwd'"
                         //sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd ${APP_TEMP_PATH}/MyNetFlix/ ; docker build -t ${DOCKER_IMAGE_NAME}:latest ."
-                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd /tmp/frontend/ ; docker build -f MyNetFlix/Dockerfile -t frontendimage:latest ."
+                        //sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd /tmp/frontend/ ; docker build -f MyNetFlix/Dockerfile -t frontendimage:latest ."
                        
+                        sh '''
+                                [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
+                                ssh-keyscan -t rsa,dsa 10.128.0.3 >> ~/.ssh/known_hosts
+                                ssh jenkinsMaster@10.128.0.3 "
+                                    cd /tmp/frontend/
+                                    docker build -f MyNetFlix/Dockerfile -t frontendimage:latest ."
+                            '''
+
+
+
                         /*  //get build Docker image                       
                         sh """
                             "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'cd ${APP_TEMP_PATH}'"
