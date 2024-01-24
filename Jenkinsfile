@@ -42,7 +42,7 @@ pipeline {
                         //get Git version
                         sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'cd ${APP_TEMP_PATH}/MyNetFlix'"
                         sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'pwd'"
-                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd ${APP_TEMP_PATH}/MyNetFlix/ && docker build -t ${DOCKER_IMAGE_NAME}:latest ."
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd ${APP_TEMP_PATH}/MyNetFlix/ ; docker build -t ${DOCKER_IMAGE_NAME}:latest ."
                        
                         /*  //get build Docker image                       
                         sh """
