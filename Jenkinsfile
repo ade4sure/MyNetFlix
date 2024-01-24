@@ -6,9 +6,9 @@ pipeline {
         DOCKERFILE_PATH = 'path/to/Dockerfile'
         DOCKER_SERVER = '10.128.0.3'
         DOCKER_SERVER_USER = 'jenkinsMaster'
-        DOCKER_IMAGE_NAME = 'frontendimage'
+        DOCKER_IMAGE_NAME = 'frontendimage:latest'
         APP_TEMP_PATH = '/tmp/frontend'
-        DOCKER_IMAGE_PATH = '/home/jmeterboss/docker_data'
+        
     }
     stages {
         stage('Deploy to Remote Docker Server') {
@@ -39,28 +39,13 @@ pipeline {
                         //env.IMAGES_PATH = sh(script: "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'docker info | grep -i 'docker root dir''", returnStdout: true).trim()
                         
                         //build Docker image
-                        //get Git version
-                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'cd ${APP_TEMP_PATH}/MyNetFlix'"
-                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'pwd'"
-                        //sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd ${APP_TEMP_PATH}/MyNetFlix/ ; docker build -t ${DOCKER_IMAGE_NAME}:latest ."
-                        //sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd /tmp/frontend/ ; docker build -f MyNetFlix/Dockerfile -t frontendimage:latest ."
-                       
+                        
                         sh '''
                                 ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} "
                                     cd /tmp/frontend/
-                                    docker build -f MyNetFlix/Dockerfile -t frontendimage:latest ."
+                                    docker build -f MyNetFlix/Dockerfile -t ${DOCKER_IMAGE_NAME} .
+                                    docker run -d -p 8080:8080 --name frontendapp ${DOCKER_IMAGE_NAME}""
                             '''
-
-
-
-                        /*  //get build Docker image                       
-                        sh """
-                            "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'cd ${APP_TEMP_PATH}'"
-                            "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd ${APP_TEMP_PATH} : docker build -t ${DOCKER_IMAGE_NAME} -f ${env.IMAGES_PATH} ."
-                        """
-
-                        // Save and load Docker image on the remote server
-                        sh "docker save ${DOCKER_IMAGE_NAME} | docker load" */
                     }
                 }
             }
