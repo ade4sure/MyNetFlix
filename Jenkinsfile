@@ -43,6 +43,9 @@ pipeline {
                         sh '''
                                 ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} "
                                     cd /tmp/frontend/
+                                    docker stop frontendapp
+                                    docker rm frontendapp
+                                    docker rmi ${DOCKER_IMAGE_NAME}
                                     docker build -f MyNetFlix/Dockerfile -t ${DOCKER_IMAGE_NAME} .
                                     docker run -d -p 80:8080 --name frontendapp ${DOCKER_IMAGE_NAME}"
                             '''
