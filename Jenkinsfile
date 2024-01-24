@@ -6,7 +6,7 @@ pipeline {
         DOCKERFILE_PATH = 'path/to/Dockerfile'
         DOCKER_SERVER = '10.128.0.3'
         DOCKER_SERVER_USER = 'jenkinsMaster'
-        DOCKER_IMAGE_NAME = 'frontEndImage'
+        DOCKER_IMAGE_NAME = 'frontendimage'
         APP_TEMP_PATH = '/tmp/frontend'
         DOCKER_IMAGE_PATH = '/home/jmeterboss/docker_data'
     }
@@ -42,7 +42,7 @@ pipeline {
                         //get Git version
                         sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'cd ${APP_TEMP_PATH}/MyNetFlix'"
                         sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'pwd'"
-                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} docker build -t ${DOCKER_IMAGE_NAME}:latest ."
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} docker build -t ${DOCKER_IMAGE_NAME}:latest -f ${APP_TEMP_PATH}/MyNetFlix"
                        
                         /*  //get build Docker image                       
                         sh """
