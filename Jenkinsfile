@@ -8,7 +8,7 @@ pipeline {
         DOCKER_SERVER_USER = 'jenkinsMaster'
         DOCKER_IMAGE_NAME = 'frontEndImage'
         APP_TEMP_PATH = '/tmp/frontend'
-        DOCKER_IMAGE_PATH = '~/docker_data'
+        DOCKER_IMAGE_PATH = '/home/jmeterboss/docker_data'
     }
     stages {
         stage('Deploy to Remote Docker Server') {
@@ -39,7 +39,9 @@ pipeline {
                         //env.IMAGES_PATH = sh(script: "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'docker info | grep -i 'docker root dir''", returnStdout: true).trim()
                         
                         //build Docker image
-                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} cd ${APP_TEMP_PATH} : docker build -t ${DOCKER_IMAGE_NAME} -f ${DOCKER_IMAGE_PATH} ."
+                        //get Git version
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'cd ${APP_TEMP_PATH}/MyNetFlix'"
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} docker build -t ${DOCKER_IMAGE_NAME}:latest -f /tmp/frontend/MyNetFlix/Dockerfile ."
                        
                         /*  //get build Docker image                       
                         sh """
