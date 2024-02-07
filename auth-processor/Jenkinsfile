@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    environment {
+        // Define your environment variables
+        GITHUB_REPO = 'https://github.com/ade4sure/MyNetFlix.git'
+        DOCKERFILE_PATH = 'auth-processor/Dockerfile'
+        DOCKER_SERVER = '10.128.0.7'
+        DOCKER_SERVER_USER = 'jenkinsMaster'
+        DOCKER_IMAGE_NAME = 'auth:latest'
+        CONTAINER_NAME = 'authapp'
+        APP_TEMP_PATH = '/tmp/auth'
+        
+    }
+    stages {
+        stage('Deploy to Remote Docker Server') {
+            steps {
+                script {
+                    // Use SSH Agent to run Docker commands on the remote server
+                    sshagent(['f355d542-7358-4d58-93a6-cc2e50f192fd']) {
+                        
+                        //ssh Init
+                        sh '''
+                                [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
+                                ssh-keyscan -t rsa,dsa ${DOCKER_SERVER} >> ~/.ssh/known_hosts
+                                ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} "
+                                    hostname
+                                    pwd
+                                    git --version"
+                            '''
+
+                        //Clear APP_TEMP_PATH
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'sudo [ -d '${APP_TEMP_PATH}' ] && rm -r ${APP_TEMP_PATH} || pwd'"
+
+                       
+                        // Clone the GitHub repository onto the remote server
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} git clone ${GITHUB_REPO} ${APP_TEMP_PATH}"
+
+                        //build Docker image                        
+                        sh '''
+                                ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} "
+                                    cd ${APP_TEMP_PATH}
+                                    docker stop ${CONTAINER_NAME}
+                                    docker rm ${CONTAINER_NAME}
+                                    docker rmi ${DOCKER_IMAGE_NAME}
+                                    docker build -f ${DOCKERFILE_PATH} -t ${DOCKER_IMAGE_NAME} .
+                                    docker run -d --name ${CONTAINER_NAME} ${DOCKER_IMAGE_NAME}"
+                            '''
+                    }
+                }
+            }
+        }
+    }
+}
