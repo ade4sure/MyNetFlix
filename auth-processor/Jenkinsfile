@@ -3,7 +3,7 @@ pipeline {
     environment {
         // Define your environment variables
         GITHUB_REPO = 'https://github.com/ade4sure/MyNetFlix.git'
-        DOCKERFILE_PATH = 'auth-processor/Dockerfile'
+        DOCKERFILE_PATH = 'Dockerfile'
         DOCKER_SERVER = '10.128.0.7'
         DOCKER_SERVER_USER = 'jenkinsMaster'
         DOCKER_IMAGE_NAME = 'auth:latest'
