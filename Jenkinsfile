@@ -4,7 +4,7 @@ pipeline {
         // Define your environment variables
         GITHUB_REPO = 'https://github.com/ade4sure/MyNetFlix.git'
         DOCKERFILE_PATH = 'path/to/Dockerfile'
-        DOCKER_SERVER = '10.128.0.3'
+        DOCKER_SERVER = '10.128.0.8'
         DOCKER_SERVER_USER = 'jenkinsMaster'
         DOCKER_IMAGE_NAME = 'frontendimage:latest'
         APP_TEMP_PATH = '/tmp/frontend'
