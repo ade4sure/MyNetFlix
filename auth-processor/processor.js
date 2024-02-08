@@ -2,7 +2,7 @@ const { Kafka, Admin } = require('kafkajs');
 
 // Define Kafka broker(s)
 const kafka = new Kafka({
-  brokers: ['34.133.89.239:9092'],
+  brokers: ['10.128.0.6:9092'],
 });
 
 // Create Kafka admin client
@@ -137,8 +137,8 @@ async function retrieveResult(requestID) {
   await createKeyedTopic();
 
   // Submit a request
-  const requestID = 'ade@gmail.com';
-  const requestMessage = 'Password';
+  //const requestID = 'ade@gmail.com';
+  //const requestMessage = 'Password';
 
   /*  for (let i = 1; i <= 20; i++) {    
     await submitRequest(`ade4sure${i}@gmail.com`, `${requestMessage}`);
