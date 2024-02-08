@@ -44,7 +44,8 @@ pipeline {
                                     docker rmi ${DOCKER_IMAGE_NAME}
                                     docker build -f ${DOCKERFILE_PATH} -t ${DOCKER_IMAGE_NAME} .
                                     docker run -d --name ${CONTAINER_NAME} ${DOCKER_IMAGE_NAME}"
-                            '''
+                            '''                            
+                                   
                     }
                 }
             }
