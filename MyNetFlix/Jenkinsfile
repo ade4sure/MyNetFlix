@@ -3,7 +3,7 @@ pipeline {
     environment {
         // Define your environment variables
         GITHUB_REPO = 'https://github.com/ade4sure/MyNetFlix.git'
-        DOCKERFILE_PATH = 'Dockerfile'
+        DOCKERFILE_PATH = 'MyNetFlix/Dockerfile'
         DOCKER_SERVER = '10.128.0.8'
         DOCKER_SERVER_USER = 'jenkinsMaster'
         DOCKER_IMAGE_NAME = 'frontendimage:latest'
@@ -43,7 +43,7 @@ pipeline {
                         
                         sh '''
                                 ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} "
-                                    cd ${APP_TEMP_PATH}/MyNetFlix
+                                    cd ${APP_TEMP_PATH}
                                     docker stop ${CONTAINER_NAME}
                                     docker rm ${CONTAINER_NAME}
                                     docker rmi ${DOCKER_IMAGE_NAME}
