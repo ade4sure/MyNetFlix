@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+    environment {
+        // Define your environment variables
+        GITHUB_REPO = 'https://github.com/ade4sure/MyNetFlix.git'
+        DOCKERFILE_PATH = 'path/to/Dockerfile'
+        DOCKER_SERVER = '10.128.0.6'
+        DOCKER_SERVER_USER = 'jenkinsMaster'
+        DOCKER_IMAGE_NAME = 'frontendimage:latest'
+        APP_TEMP_PATH = '/tmp/frontend'
+        
+    }
+    stages {
+        stage('Deploy to Remote Docker Server') {
+            steps {
+                script {
+                    // Use SSH Agent to run Docker commands on the remote server
+                    sshagent(['f355d542-7358-4d58-93a6-cc2e50f192fd']) {
+                        
+                        //sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} hostname"
+                        sh '''
+                                [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
+                                ssh-keyscan -t rsa,dsa ${DOCKER_SERVER} >> ~/.ssh/known_hosts
+                                ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} "
+                                    hostname
+                                    pwd
+                                    git --version"
+                            '''
+                        //Stop Containers
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'sudo docker stop zookeeper kafka'"
+                        
+                        //Delete Containers
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'sudo docker rm zookeeper kafka'"
+                            
+                        //Install Zoopeer
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'sudo docker run -d --restart always --name zookeeper  -p 2181:2181 -d zookeeper'"
+                        
+                        
+                        //Install Kafka
+                        //sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} sudo docker run -d --restart always -p 9092:9092 --name kafka -e KAFKA_BROKER_ID=1 -e KAFKA_ZOOKEEPER_CONNECT=${DOCKER_SERVER}:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://${DOCKER_SERVER}:9092,PLAINTEXT_HOST://${DOCKER_SERVER}:9092 -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT -e KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 -d confluentinc/cp-kafka" 
+                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} sudo docker run -d --restart always -p 9092:9092 --name kafka  -e KAFKA_ZOOKEEPER_CONNECT=${DOCKER_SERVER}:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://10.128.0.6:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 -d confluentinc/cp-kafka"
+                        
+                    }   
+                      
+                  }
+                }
+            }
+        }
+    }
+
