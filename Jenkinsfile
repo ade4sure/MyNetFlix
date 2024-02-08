@@ -17,15 +17,15 @@ pipeline {
                     // Use SSH Agent to run Docker commands on the remote server
                     sshagent(['f355d542-7358-4d58-93a6-cc2e50f192fd']) {
                         
-                        // Set the DOCKER_HOST environment variable to specify the remote Docker server
-                        env.DOCKER_HOST = "ssh://${DOCKER_SERVER_USER}@${DOCKER_SERVER}"
-
-                        //Show PWD
-                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'pwd'"
-
-                        // Display the hostname of the remote host using SSH
-                        sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'hostname'"
-
+                        // SSH init
+                        sh '''
+                                [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
+                                ssh-keyscan -t rsa,dsa ${DOCKER_SERVER} >> ~/.ssh/known_hosts
+                                ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} "
+                                    hostname
+                                    pwd
+                                    git --version"
+                            '''                        
                         //Clear frontEnd Temp
                         sh "ssh ${DOCKER_SERVER_USER}@${DOCKER_SERVER} 'sudo [ -d '/tmp/frontend' ] && rm -r /tmp/frontend || pwd'"
 
