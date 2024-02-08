@@ -34,9 +34,10 @@ namespace MyNetFlix.Controllers
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
-            var requestId = AppUser.Email;
-            var requestMessage = AppUser.Password;
-            var resultMessage = "Failed";
+            //var requestId = AppUser.Email;
+            var requestId = new Guid().ToString();
+            var requestMessage = $"{AppUser.Email} | {AppUser.Password}";
+            var resultMessage = "False";
 
             
             var producerConfig = new ProducerConfig { BootstrapServers = bootstrapServers };
