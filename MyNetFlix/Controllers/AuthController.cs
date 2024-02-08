@@ -25,7 +25,7 @@ namespace MyNetFlix.Controllers
             //Send User credential to Kafka
             var requestTopic = "authentication-requests";
             var resultTopic = "authentication-results";
-            var bootstrapServers = "34.133.89.239:9092";
+            var bootstrapServers = "10.128.0.6:9092";
 
             var resultConsumerConfig = new ConsumerConfig
             {
@@ -82,7 +82,6 @@ namespace MyNetFlix.Controllers
             };
 
             return resultMessage == "False" ? View() : RedirectToAction("UserHome", "Home");
-
         }
     }
 }
