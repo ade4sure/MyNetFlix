@@ -9,7 +9,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["MyNetFlix.csproj", "MyNetFlix/"]
+COPY ["MyNetFlix/MyNetFlix.csproj", "MyNetFlix/"]
 RUN dotnet restore "./MyNetFlix/./MyNetFlix.csproj"
 COPY . .
 WORKDIR "/src/MyNetFlix"
