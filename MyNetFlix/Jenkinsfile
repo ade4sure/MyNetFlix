@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        // Define your environment variables
+        // Define your environment variabless
         GITHUB_REPO = 'https://github.com/ade4sure/MyNetFlix.git'
         DOCKERFILE_PATH = 'MyNetFlix/Dockerfile'
         DOCKER_SERVER = '10.128.0.8'
